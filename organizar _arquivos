@@ -1,0 +1,47 @@
+#
+#
+# Programa para organizar os arquivos em pastas por data 
+#
+#
+
+
+import os
+import shutil
+from datetime import datetime
+
+
+
+def organizar_arquivos_por_data(diretorio_origem):
+    # Verifica se o diretório de origem existe
+    if not os.path.exists(diretorio_origem):
+        print("Diretório não encontrado!")
+        return
+
+    # Cria uma lista com os arquivos no diretório
+    arquivos = os.listdir(diretorio_origem)
+
+    for arquivo in arquivos:
+        caminho_arquivo = os.path.join(diretorio_origem, arquivo)
+
+        # Ignora subdiretórios
+        if os.path.isdir(caminho_arquivo):
+            continue
+
+        # Obtém a data de modificação do arquivo
+        timestamp = os.path.getmtime(caminho_arquivo)
+        data_modificacao = datetime.fromtimestamp(timestamp)
+        nome_pasta = f"aula do dia {data_modificacao.strftime('%d.%m.%Y')}"
+
+        # Cria o diretório com o nome da data, se não existir
+        caminho_pasta = os.path.join(diretorio_origem, nome_pasta)
+        if not os.path.exists(caminho_pasta):
+            os.makedirs(caminho_pasta)
+
+        # Move o arquivo para a pasta correspondente
+        novo_caminho_arquivo = os.path.join(caminho_pasta, arquivo)
+        shutil.move(caminho_arquivo, novo_caminho_arquivo)
+        print(f"Arquivo {arquivo} movido para {caminho_pasta}")
+
+# Defina o diretório de origem onde seus arquivos estão
+diretorio_origem = "D:/GRAVAÇÃO/"  # Substitua com o caminho do seu diretório
+organizar_arquivos_por_data(diretorio_origem)
